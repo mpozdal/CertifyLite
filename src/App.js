@@ -1,9 +1,20 @@
-import LoginHeader from './components/LoginHeader';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './pages/Layout';
+import Home from './pages/Home';
+import UploadPage from './pages/UploadPage';
+import MyFilesPage from './pages/MyFilesPage';
 function App() {
 	return (
 		<div className="App">
-			<LoginHeader />
+			<Router>
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route index element={<Home />} />
+						<Route path="/upload" element={<UploadPage />} />
+						<Route path="/myfiles" element={<MyFilesPage />} />
+					</Route>
+				</Routes>
+			</Router>
 		</div>
 	);
 }
