@@ -1,17 +1,21 @@
-import { useState, useEffect } from 'react';
-import Web3 from 'web3';
+import { useContext } from 'react';
 import Logo from '../assets/logo2.png';
-import { NavLink } from 'react-router-dom';
-import useMetamask from '../hooks/useMetamask';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { MetamaskContext } from '../contexts/MetamaskContext';
 function LoginHeader() {
-	const {
-		isVisible,
-		onConnect,
-		onDisconnect,
-		isConnected,
-		ethBalance,
-		accountNumber,
-	} = useMetamask();
+	const navigate = useNavigate();
+	const { isConnected, onConnect, ethBalance, onDisconnect } =
+		useContext(MetamaskContext);
+
+	const handleLogin = async () => {
+		await onConnect().then(() => {
+			if (isConnected) navigate('/allfiles');
+		});
+	};
+	const handleLogout = async () => {
+		await onDisconnect();
+		if (!isConnected) navigate('/');
+	};
 
 	return (
 		<header className="container m-auto w-full px-4  lg:max-w-[1440px]">
@@ -20,17 +24,17 @@ function LoginHeader() {
 					<img src={Logo} alt="logo" className="h-[30px] " />
 				</div>
 
-				{isVisible && (
+				{isConnected && (
 					<div className="fixed right-3 bottom-3 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition ">
 						<div className="flex items-center space-x-2">
 							<span className="text-xl">
-								<i class="fa-solid fa-plug"></i>
+								<i className="fa-solid fa-plug"></i>
 							</span>
 							<p className="font-bold">You are connected!</p>
 						</div>
 					</div>
 				)}
-				{!isVisible && (
+				{!isConnected && (
 					<div className="fixed right-3 bottom-3 z-50 rounded-md bg-red-500 px-4 py-2 text-white transition ">
 						<div className="flex items-center space-x-2">
 							<span className="text-xl">
@@ -44,7 +48,7 @@ function LoginHeader() {
 					<div className="flex row w-[20%] justify-end">
 						<button
 							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-							onClick={onConnect}
+							onClick={handleLogin}
 						>
 							Login with Metamask
 						</button>
@@ -54,10 +58,19 @@ function LoginHeader() {
 					<>
 						<ul className="flex row  ml-14 space-x-12">
 							<li>
-								<NavLink to="/myfiles">My files</NavLink>
+								<NavLink to="/" activeClassName="active">
+									Home
+								</NavLink>
 							</li>
 							<li>
-								<NavLink to="/upload">Upload</NavLink>
+								<NavLink to="/myfiles" activeClassName="active">
+									My files
+								</NavLink>
+							</li>
+							<li>
+								<NavLink to="/upload" activeClassName="active">
+									Upload
+								</NavLink>
 							</li>
 						</ul>
 						<div className="flex row items-center w-[20%] justify-end">
@@ -66,7 +79,7 @@ function LoginHeader() {
 							</h2>
 							<button
 								className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-								onClick={onDisconnect}
+								onClick={handleLogout}
 							>
 								Logout
 							</button>

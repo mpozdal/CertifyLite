@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
-import { useNavigate } from 'react-router-dom';
-function useMetamask() {
+
+export const MetamaskContext = createContext();
+export const MetamaskProvider = ({ children }) => {
+	
 	const [isConnected, setIsConnected] = useState(false);
 	const [accountNumber, setAccountNumber] = useState(null);
 	const [ethBalance, setEthBalance] = useState('');
-	const [isVisible, setIsVisible] = useState(false);
-
-	const navigate = useNavigate();
 
 	const detectCurrentProvider = () => {
 		let provider;
@@ -22,6 +21,23 @@ function useMetamask() {
 		}
 		return provider;
 	};
+	const checkMetamaskConnection = async () => {
+		try {
+			const currentProvider = detectCurrentProvider();
+			if (currentProvider) {
+				const web3 = new Web3(currentProvider);
+				const userAccount = await web3.eth.getAccounts();
+				const account = userAccount[0];
+				setAccountNumber(account);
+				let ethBalance2 = await web3.eth.getBalance(account);
+				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
+				setIsConnected(true);
+				
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	const onConnect = async () => {
 		try {
@@ -32,33 +48,36 @@ function useMetamask() {
 				});
 				const web3 = new Web3(currentProvider);
 				const userAccount = await web3.eth.getAccounts();
-
 				const account = userAccount[0];
 				setAccountNumber(account);
 				let ethBalance2 = await web3.eth.getBalance(account);
 				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
 				setIsConnected(true);
-				setIsVisible(true);
-				navigate('/myfiles');
 			}
 		} catch (err) {
 			console.log(err);
 		}
 	};
+
 	const onDisconnect = () => {
 		setIsConnected(false);
-		setIsVisible(false);
-		navigate('/');
 	};
-	const data = {
-		isConnected: isConnected,
-		onConnect: onConnect,
-		onDisconnect: onDisconnect,
-		accountNumber: accountNumber,
-		ethBalance: ethBalance,
-		isVisible: isVisible,
-	};
-	return data;
-}
 
-export default useMetamask;
+	useEffect(() => {
+		checkMetamaskConnection();
+	}, []);
+
+	return (
+		<MetamaskContext.Provider
+			value={{
+				accountNumber,
+				isConnected,
+				onConnect,
+				ethBalance,
+				onDisconnect,
+			}}
+		>
+			{children}
+		</MetamaskContext.Provider>
+	);
+};

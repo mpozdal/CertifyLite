@@ -1,15 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { FileInput, Label } from 'flowbite-react';
 import FileDetails from '../components/FileDetails';
+
 function UploadPage() {
 	const [selectedFile, setSelectedFile] = useState(null);
-	const onSelectFile = () => {
-		const file = document.querySelector('#dropzone-file').files;
-		setSelectedFile(file[0]);
+	const [cid, setCid] = useState('');
+
+	const handleFileChange = (e) => {
+		setSelectedFile(e.target.files[0]);
 	};
 	const removeSelectedFile = () => {
 		if (selectedFile !== null) {
 			setSelectedFile(null);
+		}
+	};
+
+	const handleUploadFile = async () => {
+		try {
+			if (selectedFile) {
+				const fileCid = '';
+				setCid(fileCid);
+				console.log('File uploaded to IPFS. CID:', fileCid);
+				alert('Your CID: ' + cid);
+			}
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -43,7 +58,7 @@ function UploadPage() {
 				<FileInput
 					id="dropzone-file"
 					className="hidden"
-					onChange={onSelectFile}
+					onChange={handleFileChange}
 				/>
 			</Label>
 			<FileDetails
@@ -55,7 +70,7 @@ function UploadPage() {
 					'bg-blue-500 w-full lg:w-[50%] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full'
 				}
 				disabled={selectedFile === null}
-				onClick={() => alert('uploaded')}
+				onClick={handleUploadFile}
 			>
 				Upload
 			</button>

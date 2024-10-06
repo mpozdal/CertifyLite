@@ -1,23 +1,44 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Navigate,
+} from 'react-router-dom';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
 import UploadPage from './pages/UploadPage';
 import MyFilesPage from './pages/MyFilesPage';
-
-import useMetamask from './hooks/useMetamask';
+import { MetamaskProvider } from './contexts/MetamaskContext';
+import PrivateRoute from './PrivateRoute';
 function App() {
 	return (
-		<div className="App">
+		<MetamaskProvider>
 			<Router>
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route index element={<Home />} />
-						<Route path="/upload" element={<UploadPage />} />
-						<Route path="/myfiles" element={<MyFilesPage />} />
+						<Route
+							path="/upload"
+							element={
+								<PrivateRoute>
+									<UploadPage />
+								</PrivateRoute>
+							}
+						/>
+
+						<Route
+							path="/myfiles"
+							element={
+								<PrivateRoute>
+									<MyFilesPage />
+								</PrivateRoute>
+							}
+						/>
+						<Route path="*" element={<Navigate to="/" replace />} />
 					</Route>
 				</Routes>
 			</Router>
-		</div>
+		</MetamaskProvider>
 	);
 }
 
