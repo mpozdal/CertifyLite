@@ -2,67 +2,22 @@ import { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import Logo from '../assets/logo2.png';
 import { NavLink } from 'react-router-dom';
+import useMetamask from '../hooks/useMetamask';
 function LoginHeader() {
-	const [isConnected, setIsConnected] = useState(false);
-	const [accountNumber, setAccountNumber] = useState(null);
-	const [ethBalance, setEthBalance] = useState('');
-	const [isVisible, setIsVisible] = useState(false);
+	const {
+		isVisible,
+		onConnect,
+		onDisconnect,
+		isConnected,
+		ethBalance,
+		accountNumber,
+	} = useMetamask();
 
-	const detectCurrentProvider = () => {
-		let provider;
-		if (window.ethereum) {
-			provider = window.ethereum;
-		} else if (window.web3) {
-			provider = window.web3.currentProvider;
-		} else {
-			console.log(
-				'Non-ethereum browser detected. Please install Metamask'
-			);
-		}
-		return provider;
-	};
-
-	const onConnect = async () => {
-		try {
-			const currentProvider = detectCurrentProvider();
-			if (currentProvider) {
-				await currentProvider.request({
-					method: 'eth_requestAccounts',
-				});
-				const web3 = new Web3(currentProvider);
-				const userAccount = await web3.eth.getAccounts();
-				console.log(userAccount);
-				const account = userAccount[0];
-				setAccountNumber(account);
-				let ethBalance2 = await web3.eth.getBalance(account);
-				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
-				setIsConnected(true);
-				setIsVisible(true);
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
-	// useEffect(() => {
-	// 	if (isVisible) {
-	// 		const timer = setTimeout(() => {
-	// 			setIsVisible(false); // Po 5 sekundach ukryj komponent
-	// 		}, 3000);
-	// 		return () => clearTimeout(timer);
-	// 	}
-	// }, [isConnected]);
-
-	const onDisconnect = () => {
-		setIsConnected(false);
-		setIsVisible(false);
-	};
 	return (
 		<header className="container m-auto w-full px-4  lg:max-w-[1440px]">
 			<div className="flex justify-between items-center py-3">
 				<div className="w-[20%]">
-					<NavLink to="/">
-						<img src={Logo} alt="logo" className="h-[30px] " />
-					</NavLink>
+					<img src={Logo} alt="logo" className="h-[30px] " />
 				</div>
 
 				{isVisible && (
@@ -99,10 +54,10 @@ function LoginHeader() {
 					<>
 						<ul className="flex row  ml-14 space-x-12">
 							<li>
-								<NavLink to="/upload">Upload</NavLink>
+								<NavLink to="/myfiles">My files</NavLink>
 							</li>
 							<li>
-								<NavLink to="/myfiles">My files</NavLink>
+								<NavLink to="/upload">Upload</NavLink>
 							</li>
 						</ul>
 						<div className="flex row items-center w-[20%] justify-end">

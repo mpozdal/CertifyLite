@@ -3,6 +3,8 @@ import Layout from './pages/Layout';
 import Home from './pages/Home';
 import UploadPage from './pages/UploadPage';
 import MyFilesPage from './pages/MyFilesPage';
+
+import useMetamask from './hooks/useMetamask';
 function App() {
 	return (
 		<div className="App">
