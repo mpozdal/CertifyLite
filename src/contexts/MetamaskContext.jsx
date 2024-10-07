@@ -3,7 +3,6 @@ import Web3 from 'web3';
 
 export const MetamaskContext = createContext();
 export const MetamaskProvider = ({ children }) => {
-	
 	const [isConnected, setIsConnected] = useState(false);
 	const [accountNumber, setAccountNumber] = useState(null);
 	const [ethBalance, setEthBalance] = useState('');
@@ -32,7 +31,6 @@ export const MetamaskProvider = ({ children }) => {
 				let ethBalance2 = await web3.eth.getBalance(account);
 				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
 				setIsConnected(true);
-				
 			}
 		} catch (err) {
 			console.log(err);
@@ -61,6 +59,7 @@ export const MetamaskProvider = ({ children }) => {
 
 	const onDisconnect = () => {
 		setIsConnected(false);
+		setAccountNumber(null);
 	};
 
 	useEffect(() => {

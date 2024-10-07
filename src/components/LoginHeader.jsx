@@ -2,9 +2,12 @@ import { useContext } from 'react';
 import Logo from '../assets/logo2.png';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { MetamaskContext } from '../contexts/MetamaskContext';
+import 'react-tooltip/dist/react-tooltip.css';
+import { Tooltip } from 'react-tooltip';
+
 function LoginHeader() {
 	const navigate = useNavigate();
-	const { isConnected, onConnect, ethBalance, onDisconnect } =
+	const { isConnected, onConnect, ethBalance, onDisconnect, accountNumber } =
 		useContext(MetamaskContext);
 
 	const handleLogin = async () => {
@@ -26,19 +29,27 @@ function LoginHeader() {
 
 				{isConnected && (
 					<div className="fixed right-3 bottom-3 z-50 rounded-md bg-green-500 px-4 py-2 text-white transition ">
-						<div className="flex items-center space-x-2">
-							<span className="text-xl">
-								<i className="fa-solid fa-plug"></i>
-							</span>
-							<p className="font-bold">You are connected!</p>
-						</div>
+						<a
+							data-tooltip-id="my-tooltip"
+							data-tooltip-content={
+								'Your account: ' + accountNumber
+							}
+						>
+							<Tooltip id="my-tooltip" />
+							<div className="flex items-center space-x-2">
+								<span className="text-xl">
+									<i className="fa-solid fa-plug"></i>
+								</span>
+								<p className="font-bold">You are connected!</p>
+							</div>
+						</a>
 					</div>
 				)}
 				{!isConnected && (
 					<div className="fixed right-3 bottom-3 z-50 rounded-md bg-red-500 px-4 py-2 text-white transition ">
 						<div className="flex items-center space-x-2">
 							<span className="text-xl">
-								<i class="fa-solid fa-plug-circle-xmark"></i>
+								<i className="fa-solid fa-plug-circle-xmark"></i>
 							</span>
 							<p className="font-bold">You are not connected!</p>
 						</div>

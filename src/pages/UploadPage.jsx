@@ -4,24 +4,31 @@ import FileDetails from '../components/FileDetails';
 
 function UploadPage() {
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [cid, setCid] = useState('');
+	const [hash, setHash] = useState('');
 
 	const handleFileChange = (e) => {
 		setSelectedFile(e.target.files[0]);
+		setHash('');
 	};
 	const removeSelectedFile = () => {
 		if (selectedFile !== null) {
 			setSelectedFile(null);
+			setHash('');
 		}
 	};
-
+	const calculateHash = async () => {
+		const arrayBuffer = await selectedFile.arrayBuffer(); // Zamienia plik na ArrayBuffer
+		const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer); // Generuje hash
+		const hashArray = Array.from(new Uint8Array(hashBuffer)); // Konwertuje na tablicę bajtów
+		const hashHex = hashArray
+			.map((b) => b.toString(16).padStart(2, '0'))
+			.join('');
+		setHash(hashHex);
+	};
 	const handleUploadFile = async () => {
 		try {
 			if (selectedFile) {
-				const fileCid = '';
-				setCid(fileCid);
-				console.log('File uploaded to IPFS. CID:', fileCid);
-				alert('Your CID: ' + cid);
+				calculateHash();
 			}
 		} catch (err) {
 			console.log(err);
@@ -65,6 +72,7 @@ function UploadPage() {
 				data={selectedFile}
 				removeSelectedFile={removeSelectedFile}
 			/>
+			{hash !== '' && <h1>hash: {hash}</h1>}
 			<button
 				className={
 					'bg-blue-500 w-full lg:w-[50%] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full'
