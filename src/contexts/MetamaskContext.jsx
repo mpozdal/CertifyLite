@@ -1,11 +1,12 @@
 import { createContext, useState, useEffect } from 'react';
 import Web3 from 'web3';
-
+import FileRegistry from '../build/contracts/FileRegistry.json';
 export const MetamaskContext = createContext();
 export const MetamaskProvider = ({ children }) => {
 	const [isConnected, setIsConnected] = useState(false);
 	const [accountNumber, setAccountNumber] = useState(null);
 	const [ethBalance, setEthBalance] = useState('');
+	const [contract, setContract] = useState(null);
 
 	const detectCurrentProvider = () => {
 		let provider;
@@ -48,6 +49,19 @@ export const MetamaskProvider = ({ children }) => {
 				const userAccount = await web3.eth.getAccounts();
 				const account = userAccount[0];
 				setAccountNumber(account);
+
+				const networkId = await web3.eth.net.getId();
+				const deployedNetwork = FileRegistry.networks[networkId];
+				if (deployedNetwork) {
+					const contractInstance = new web3.eth.Contract(
+						FileRegistry.abi,
+						deployedNetwork.address
+					);
+					setContract(contractInstance);
+				} else {
+					alert('Contract not deployed to detected network.');
+				}
+
 				let ethBalance2 = await web3.eth.getBalance(account);
 				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
 				setIsConnected(true);
@@ -62,10 +76,6 @@ export const MetamaskProvider = ({ children }) => {
 		setAccountNumber(null);
 	};
 
-	useEffect(() => {
-		checkMetamaskConnection();
-	}, []);
-
 	return (
 		<MetamaskContext.Provider
 			value={{
@@ -74,6 +84,7 @@ export const MetamaskProvider = ({ children }) => {
 				onConnect,
 				ethBalance,
 				onDisconnect,
+				contract,
 			}}
 		>
 			{children}

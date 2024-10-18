@@ -1,34 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FileInput, Label } from 'flowbite-react';
 import FileDetails from '../components/FileDetails';
-
+import { storeFileHash, verifyFileHash } from '../FileLogic';
+import { MetamaskContext } from '../contexts/MetamaskContext';
 function UploadPage() {
+	const { accountNumber, contract } = useContext(MetamaskContext);
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [hash, setHash] = useState('');
 
 	const handleFileChange = (e) => {
 		setSelectedFile(e.target.files[0]);
-		setHash('');
 	};
 	const removeSelectedFile = () => {
 		if (selectedFile !== null) {
 			setSelectedFile(null);
-			setHash('');
 		}
 	};
 	const calculateHash = async () => {
 		const arrayBuffer = await selectedFile.arrayBuffer(); // Zamienia plik na ArrayBuffer
-		const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer); // Generuje hash
-		const hashArray = Array.from(new Uint8Array(hashBuffer)); // Konwertuje na tablicę bajtów
-		const hashHex = hashArray
-			.map((b) => b.toString(16).padStart(2, '0'))
+		const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+		const hashHex = Array.prototype.map
+			.call(new Uint8Array(hashBuffer), (x) =>
+				('00' + x.toString(16)).slice(-2)
+			)
 			.join('');
-		setHash(hashHex);
+		return '0x' + hashHex;
 	};
 	const handleUploadFile = async () => {
 		try {
 			if (selectedFile) {
-				calculateHash();
+				const hash = await calculateHash();
+				if (hash && accountNumber && contract)
+					storeFileHash(accountNumber, hash, contract);
+				else alert('something went wrong..');
 			}
 		} catch (err) {
 			console.log(err);
@@ -72,7 +75,7 @@ function UploadPage() {
 				data={selectedFile}
 				removeSelectedFile={removeSelectedFile}
 			/>
-			{hash !== '' && <h1>hash: {hash}</h1>}
+
 			<button
 				className={
 					'bg-blue-500 w-full lg:w-[50%] hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full'

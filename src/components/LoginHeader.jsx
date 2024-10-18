@@ -86,7 +86,8 @@ function LoginHeader() {
 						</ul>
 						<div className="flex row items-center w-[20%] justify-end">
 							<h2 className=" font-bold">
-								Balance: {ethBalance} ETH &nbsp;
+								Balance: {parseFloat(ethBalance).toFixed(10)}{' '}
+								ETH &nbsp;
 							</h2>
 							<button
 								className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
