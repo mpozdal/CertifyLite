@@ -21,7 +21,7 @@ function MyFilesPage() {
 				<a
 					rel="noreferrer"
 					target="_blank"
-					href="https://sepolia.etherscan.io/address/0xAF9662A4f23bc87AFee243910Aa9bE2399a90AD2"
+					href="https://sepolia.etherscan.io/address/0x0045Bd4dD6b3f4B0e5F3E26F11f91af455987646"
 					className="bg-blue-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm hover:bg-blue-600"
 				>
 					<i className="fa-solid fa-sitemap"></i>
@@ -35,16 +35,22 @@ function MyFilesPage() {
 							<th className="py-2 px-2 sm:px-4 border-b border-gray-300 text-left">
 								Hash
 							</th>
+							<th className="py-2 px-2 sm:px-4 border-b border-gray-300 text-left">
+								Filename
+							</th>
 							<th className="py-2 px-2 sm:px-4 border-b border-gray-300 text-center">
 								Action
 							</th>
 						</tr>
 					</thead>
-					<tbody clas>
-						{hashes.map((hash, index) => (
+					<tbody>
+						{hashes.map((item, index) => (
 							<tr key={index} className="hover:bg-gray-50">
 								<td className="py-2 px-2 sm:px-4 border-b border-gray-300 text-sm sm:text-base">
-									{hash}
+									{item.fileHash}
+								</td>
+								<td className="py-2 px-2 sm:px-4 border-b border-gray-300 text-sm sm:text-base">
+									{item.fileName}
 								</td>
 								<td className="py-2 px-2 sm:px-4 border-b border-gray-300 text-center space-x-2">
 									<button
@@ -56,8 +62,12 @@ function MyFilesPage() {
 
 									<button
 										onClick={() => {
-											navigator.clipboard.writeText(hash);
-											alert('Hash copied: ' + hash);
+											navigator.clipboard.writeText(
+												item.fileHash
+											);
+											alert(
+												'Hash copied: ' + item.fileHash
+											);
 										}}
 										className="bg-blue-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full font-bold text-xs sm:text-sm hover:bg-blue-600"
 									>

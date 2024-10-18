@@ -1,26 +1,30 @@
-export const storeFileHash = async (accountNumber, fileHash, contract) => {
-	console.log(fileHash);
+export const storeFileHash = async (
+	accountNumber,
+	fileHash,
+	contract,
+	name,
+	setStatus
+) => {
+	setStatus('Uploading data at blockchain..');
 	try {
 		await contract.methods
-			.storeFileHash(fileHash)
+			.addRecord(fileHash, name)
 			.send({ from: accountNumber });
-		console.log('success');
+		setStatus('Data uploaded at blockchain!');
 	} catch (err) {
-		console.log(err);
+		setStatus('Error while uploading data at blockchain!');
 	}
 };
-export const verifyFileHash = async (file, fileHash, contract) => {
+export const verifyFileHash = async (file, fileHash, contract, setStatus) => {
 	if (file && contract && fileHash) {
 		try {
 			const exists = await contract.methods
 				.verifyFileHash(fileHash)
 				.call();
 			if (exists) {
-				console.log(
-					'File hash is already registered on the blockchain.'
-				);
+				setStatus('File hash is already registered on the blockchain.');
 			} else {
-				console.log('File hash is not registered.');
+				setStatus('File hash is not registered.');
 			}
 		} catch (err) {
 			console.error(err);
@@ -29,20 +33,19 @@ export const verifyFileHash = async (file, fileHash, contract) => {
 	}
 };
 
-export const getUserHashes = async (accountNumber, contract) => {
+export const getUserHashes = async (accountNumber, contract, setStatus) => {
 	let hashes = [];
 	if (contract && accountNumber) {
 		try {
 			await contract.methods
-				.getUserHashes()
+				.getUserFiles()
 				.call({ from: accountNumber })
 				.then((res) => {
 					hashes = res;
 				});
 		} catch (err) {
-			console.log(err);
+			setStatus(err);
 		}
 	}
-	console.log(hashes);
 	return hashes;
 };
