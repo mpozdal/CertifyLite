@@ -9,8 +9,11 @@ module.exports = {
 					'https://sepolia.infura.io/v3/3a19fbfcf0074dfe94be0462861764bf'
 				),
 			network_id: 11155111, // ID sieci Sepolia
-			gas: 5000000, // Maksymalny limit gazu
-			gasPrice: 10000000000,
+			gas: 4500000, // Opcjonalne: limit gazu
+			gasPrice: 10000000000, // Opcjonalne: cena gazu (10 gwei)
+			confirmations: 2, // Potwierdzenia przed zakończeniem transakcji
+			timeoutBlocks: 200, // Liczba bloków, zanim transakcja wygaśnie
+			skipDryRun: true,
 		},
 	},
 	compilers: {

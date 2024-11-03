@@ -10,6 +10,7 @@ import UploadPage from './pages/UploadPage';
 import MyFilesPage from './pages/MyFilesPage';
 import { MetamaskProvider } from './contexts/MetamaskContext';
 import PrivateRoute from './PrivateRoute';
+import FileDetailsPage from './pages/FileDetailsPage';
 function App() {
 	return (
 		<MetamaskProvider>
@@ -34,8 +35,17 @@ function App() {
 								</PrivateRoute>
 							}
 						/>
+
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Route>
+					<Route
+						path="/myfiles/:id"
+						element={
+							<PrivateRoute>
+								<FileDetailsPage />
+							</PrivateRoute>
+						}
+					></Route>
 				</Routes>
 			</Router>
 		</MetamaskProvider>
