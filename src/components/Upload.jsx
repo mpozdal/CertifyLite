@@ -4,7 +4,7 @@ function Upload({ selectedFile, handleFileChange }) {
 	return (
 		<Label
 			htmlFor="dropzone-file"
-			className="flex h-40 w-full lg:w-[50%] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-blue-500  hover:bg-gray-100 "
+			className="flex h-40 w-full  cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-blue-500  hover:bg-gray-100 "
 		>
 			<div className="flex flex-col items-center justify-center pb-6 pt-5">
 				<svg

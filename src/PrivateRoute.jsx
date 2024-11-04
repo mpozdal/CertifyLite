@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { MetamaskContext } from './contexts/MetamaskContext';
 const PrivateRoute = ({ children }) => {
 	const { isConnected } = useContext(MetamaskContext); // Pobieramy stan z MetaMaskContext

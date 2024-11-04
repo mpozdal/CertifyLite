@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import Web3 from 'web3';
 import FileRegistry from '../build/contracts/FileRegistry.json';
 export const MetamaskContext = createContext();
@@ -21,22 +21,22 @@ export const MetamaskProvider = ({ children }) => {
 		}
 		return provider;
 	};
-	const checkMetamaskConnection = async () => {
-		try {
-			const currentProvider = detectCurrentProvider();
-			if (currentProvider) {
-				const web3 = new Web3(currentProvider);
-				const userAccount = await web3.eth.getAccounts();
-				const account = userAccount[0];
-				setAccountNumber(account);
-				let ethBalance2 = await web3.eth.getBalance(account);
-				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
-				setIsConnected(true);
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
+	// const checkMetamaskConnection = async () => {
+	// 	try {
+	// 		const currentProvider = detectCurrentProvider();
+	// 		if (currentProvider) {
+	// 			const web3 = new Web3(currentProvider);
+	// 			const userAccount = await web3.eth.getAccounts();
+	// 			const account = userAccount[0];
+	// 			setAccountNumber(account);
+	// 			let ethBalance2 = await web3.eth.getBalance(account);
+	// 			setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
+	// 			setIsConnected(true);
+	// 		}
+	// 	} catch (err) {
+	// 		console.log(err);
+	// 	}
+	// };
 
 	const onConnect = async () => {
 		try {

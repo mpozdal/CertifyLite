@@ -6,7 +6,6 @@ import {
 } from 'react-router-dom';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
-import UploadPage from './pages/UploadPage';
 import MyFilesPage from './pages/MyFilesPage';
 import { MetamaskProvider } from './contexts/MetamaskContext';
 import PrivateRoute from './PrivateRoute';
@@ -18,17 +17,17 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route index element={<Home />} />
-						<Route
+						{/* <Route
 							path="/upload"
 							element={
 								<PrivateRoute>
 									<UploadPage />
 								</PrivateRoute>
 							}
-						/>
+						/> */}
 
 						<Route
-							path="/myfiles"
+							path="/files"
 							element={
 								<PrivateRoute>
 									<MyFilesPage />
@@ -39,7 +38,7 @@ function App() {
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Route>
 					<Route
-						path="/myfiles/:id"
+						path="/files/:id"
 						element={
 							<PrivateRoute>
 								<FileDetailsPage />

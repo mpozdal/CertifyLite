@@ -6,7 +6,22 @@ export const storeFileHash = async (
 ) => {
 	try {
 		await contract.methods
-			.addFile(fileHash, name)
+			.addFile(fileHash, name, 0)
+			.send({ from: accountNumber });
+	} catch (err) {
+		console.log('Error while uploading data at blockchain!');
+	}
+};
+export const addNewVersion = async (
+	accountNumber,
+	fileHash,
+	contract,
+	name,
+	baseFileId
+) => {
+	try {
+		await contract.methods
+			.addFile(fileHash, name, baseFileId)
 			.send({ from: accountNumber });
 	} catch (err) {
 		console.log('Error while uploading data at blockchain!');
@@ -37,10 +52,9 @@ export const getUserFiles = async (accountNumber, contract) => {
 	if (contract && accountNumber) {
 		try {
 			await contract.methods
-				.getUserFiles()
-				.call({ from: accountNumber })
+				.getUserFiles(accountNumber)
+				.call()
 				.then((res) => {
-					console.log(res);
 					hashes = res;
 				});
 		} catch (err) {
@@ -84,12 +98,12 @@ export const getFile = async (fileID, contract) => {
 	return file;
 };
 
-export const checkAuthenticity = async (hash, contract) => {
+export const checkAuthenticity = async (fileId, hash, version, contract) => {
 	let isLegit = false;
 	if (contract) {
 		try {
 			await contract.methods
-				.verifyFile(hash)
+				.verifySpecificVersion(fileId, hash, version)
 				.call()
 				.then((res) => {
 					isLegit = res;
@@ -110,4 +124,21 @@ export const calculateHash = async (selectedFile) => {
 		)
 		.join('');
 	return '0x' + hashHex;
+};
+
+export const getAllVersions = async (baseFileID, contract) => {
+	let hashes = [];
+	if (contract) {
+		try {
+			await contract.methods
+				.getFileVersions(baseFileID)
+				.call()
+				.then((res) => {
+					hashes = res;
+				});
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	return hashes;
 };

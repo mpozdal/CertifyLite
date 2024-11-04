@@ -1,12 +1,12 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-
+require('dotenv').config();
 module.exports = {
 	networks: {
 		sepolia: {
 			provider: () =>
 				new HDWalletProvider(
-					'2270bd9b989e123b8888e2f2edb3f5242d40ffa334454cf2e9ecd7574b048ab9',
-					'https://sepolia.infura.io/v3/3a19fbfcf0074dfe94be0462861764bf'
+					process.env.PRIVATE_KEY,
+					process.env.INFURA_SEPOLIA_URL
 				),
 			network_id: 11155111, // ID sieci Sepolia
 			gas: 4500000, // Opcjonalne: limit gazu
