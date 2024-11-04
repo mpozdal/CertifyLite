@@ -20,9 +20,9 @@ function MyFilesPage() {
 	const handleGetAllFiles = async () => {
 		setResponse('loading2');
 		setIsLoading(true);
+		setHashes([]);
 		try {
 			const hashesArr = await getUserFiles(accountNumber, contract);
-
 			setHashes(sortByTimestamp(hashesArr, asc));
 		} catch (err) {
 			console.log(err);
@@ -30,6 +30,7 @@ function MyFilesPage() {
 		setIsLoading(false);
 	};
 	useEffect(() => {
+		setHashes([]);
 		handleGetAllFiles();
 		// eslint-disable-next-line
 	}, []);
@@ -52,15 +53,18 @@ function MyFilesPage() {
 
 	const handleSort = () => {
 		setAsc(!asc);
+		setHashes([]);
 		setHashes(sortByTimestamp(hashes, !asc));
 	};
 
 	const handleShowFiles = async () => {
 		setMyFiles(!myFiles);
 		setIsLoading(true);
-
+		setHashes([]);
 		try {
-			const hashesArr = await getAllFiles(contract);
+			let hashesArr;
+			if (myFiles) hashesArr = await getAllFiles(contract);
+			else hashesArr = await getUserFiles(accountNumber, contract);
 			setHashes(sortByTimestamp(hashesArr, asc));
 		} catch (err) {
 			console.log(err);
