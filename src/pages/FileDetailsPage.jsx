@@ -19,6 +19,7 @@ function FileDetailsPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [response, setResponse] = useState('');
 	const [name, setName] = useState('');
+	const [options, setOptions] = useState([]);
 
 	const { fileID } = location.state || {};
 
@@ -66,24 +67,38 @@ function FileDetailsPage() {
 		setResponse('upload/verify');
 		setIsLoading(true);
 	};
-	useEffect(() => {
-		const handleGetFile = async () => {
-			const temp = await getAllVersions(fileID, contract).then(() =>
-				setTimeout(() => setIsLoading(false), 600)
+	const handleGetFile = async () => {
+		await getAllVersions(fileID, contract).then((res) => {
+			console.log(res);
+			setFiles(res);
+			setFile(res[res.length - 1]);
+			setOptions(
+				res.map((file) => ({
+					value: Number(file.version),
+					label: 'Version ' + Number(file.version),
+				}))
 			);
-			setFiles(temp);
-			setFile(temp[temp.length - 1]);
-		};
+			setTimeout(() => setIsLoading(false), 600);
+		});
 
+		// const options2 = temp.map((file) => ({
+		// 	value: Number(file.version),
+		// 	label: 'Version ' + Number(file.version),
+		// }));
+
+		// setOptions(options2);
+		//setFiles(temp);
+		//setFile(temp[temp.length - 1]);
+	};
+
+	useEffect(() => {
 		setIsLoading(true);
 		setResponse('loading');
 		handleGetFile();
 		// eslint-disable-next-line
 	}, []);
-	const options = files.map((file) => ({
-		value: Number(file.version),
-		label: 'Version ' + Number(file.version),
-	}));
+	console.log(files);
+
 	const [selectedOption, setSelectedOption] = useState(
 		options[files.length - 1]
 	);
