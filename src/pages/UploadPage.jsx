@@ -3,11 +3,15 @@ import { storeFileHash, calculateHash } from '../FileLogic';
 import { MetamaskContext } from '../contexts/MetamaskContext';
 import Upload from '../components/Upload';
 import Loader from '../components/Loader';
+import { useNavigate } from 'react-router-dom';
 function UploadPage() {
+	const navigate = useNavigate();
 	const { accountNumber, contract } = useContext(MetamaskContext);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [name, setName] = useState(null);
+	const [res, setRes] = useState(null);
+	const [response, setResponse] = useState('');
 
 	const handleFileChange = (e) => {
 		setSelectedFile(e.target.files[0]);
@@ -19,25 +23,28 @@ function UploadPage() {
 	}, []);
 
 	const handleUploadFile = async () => {
+		setResponse('uploading');
 		setIsLoading(true);
+		let result;
 		try {
 			if (selectedFile) {
 				const hash = await calculateHash(selectedFile);
 				if (hash && accountNumber && contract && name) {
-					storeFileHash(accountNumber, hash, contract, name);
+					result = storeFileHash(accountNumber, hash, contract, name);
 					setSelectedFile(null);
 				} else alert('something went wrong..');
 			}
 		} catch (err) {
 			console.log(err);
 		}
+		console.log(result);
 		setIsLoading(false);
 	};
 
 	return (
 		<>
 			{isLoading && (
-				<Loader response={'uploading'} setIsLoading={setIsLoading} />
+				<Loader response={response} setIsLoading={setIsLoading} />
 			)}
 
 			<div className="w-full flex justify-center items-center  flex-col">

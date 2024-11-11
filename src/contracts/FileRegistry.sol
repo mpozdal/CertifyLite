@@ -7,7 +7,7 @@ contract FileRegistry {
     // Struktura przechowująca dane o pliku
     struct File {
         uint fileId; // Unikalny identyfikator pliku
-        bytes32 fileHash; // Hash pliku (np. SHA-256)
+        bytes32 fileHash; // Hash pliku (SHA-256)
         string fileName; // Nazwa pliku
         uint timestamp; // Data dodania pliku
         address uploader; // Adres użytkownika, który dodał plik
@@ -67,6 +67,10 @@ contract FileRegistry {
             require(
                 files[baseFileId].fileId == baseFileId,
                 "Base file does not exist"
+            );
+            require(
+                files[baseFileId].uploader == msg.sender,
+                "Only the owner of the file can add a new version"
             );
             version =
                 files[
@@ -130,6 +134,75 @@ contract FileRegistry {
             allFiles[i] = files[allFileIds[i]];
         }
         return allFiles;
+    }
+    /**
+     * @notice Pobiera najnowszą wersję każdego pliku
+     * @return Lista najnowszych wersji plików
+     */
+    function getLatestFiles() public view returns (File[] memory) {
+        // Przygotowanie tablicy do przechowywania najnowszych wersji plików
+        File[] memory latestFiles = new File[](allFileIds.length);
+        uint latestCount = 0;
+
+        // Iteracja przez wszystkie fileIds, aby znaleźć najnowsze wersje
+        for (uint i = 0; i < allFileIds.length; i++) {
+            uint baseFileId = files[allFileIds[i]].baseFileId;
+
+            // Jeśli to jest ostatnia wersja pliku bazowego, dodajemy go do listy
+            if (
+                fileVersions[baseFileId][fileVersions[baseFileId].length - 1] ==
+                allFileIds[i]
+            ) {
+                latestFiles[latestCount] = files[allFileIds[i]];
+                latestCount++;
+            }
+        }
+
+        // Dopasowanie rozmiaru tablicy, aby zawierała tylko najnowsze wersje
+        File[] memory result = new File[](latestCount);
+        for (uint j = 0; j < latestCount; j++) {
+            result[j] = latestFiles[j];
+        }
+
+        return result;
+    }
+    /**
+     * @notice Pobiera najnowszą wersję każdego pliku przesłanego przez konkretnego użytkownika
+     * @param user Adres użytkownika
+     * @return Lista najnowszych wersji plików przesłanych przez użytkownika
+     */
+    function getLatestFilesByUser(
+        address user
+    ) public view returns (File[] memory) {
+        // Pobranie listy plików dodanych przez użytkownika
+        uint[] memory userFileIds = userFiles[user];
+
+        // Przygotowanie tablicy do przechowywania najnowszych wersji plików użytkownika
+        File[] memory latestUserFiles = new File[](userFileIds.length);
+        uint latestCount = 0;
+
+        // Iteracja przez wszystkie pliki dodane przez użytkownika
+        for (uint i = 0; i < userFileIds.length; i++) {
+            uint fileId = userFileIds[i];
+            uint baseFileId = files[fileId].baseFileId;
+
+            // Jeśli to jest ostatnia wersja pliku bazowego, dodajemy go do listy
+            if (
+                fileVersions[baseFileId][fileVersions[baseFileId].length - 1] ==
+                fileId
+            ) {
+                latestUserFiles[latestCount] = files[fileId];
+                latestCount++;
+            }
+        }
+
+        // Dopasowanie rozmiaru tablicy, aby zawierała tylko najnowsze wersje plików użytkownika
+        File[] memory result = new File[](latestCount);
+        for (uint j = 0; j < latestCount; j++) {
+            result[j] = latestUserFiles[j];
+        }
+
+        return result;
     }
 
     /**

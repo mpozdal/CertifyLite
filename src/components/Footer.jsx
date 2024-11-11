@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
 	return (
-		<div className=" cursor-pointer bg-gray-700 w-full min-h-[120px] mt-10 text-white text-3xl flex justify-center flex-col lg:flex-row items-center gap-y-5 lg:gap-x-10 py-5">
+		<div className=" cursor-pointer bg-gray-700 w-full min-h-[120px] text-white text-3xl flex justify-center flex-col lg:flex-row items-center gap-y-5 lg:gap-x-10 py-5">
 			<a
 				href="https://github.com/mpozdal"
 				target="_blank"

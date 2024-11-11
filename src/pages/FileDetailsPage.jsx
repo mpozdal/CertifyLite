@@ -120,7 +120,7 @@ function FileDetailsPage() {
 				/>
 			)}
 
-			<div className="min-h-[100vh] flex flex-col items-center justify-around   p-4">
+			<div className="flex flex-col items-center justify-around  p-4">
 				<div className="flex text-3xl items-start  ">
 					<button
 						onClick={() => navigate(`/files`)}
@@ -155,7 +155,7 @@ function FileDetailsPage() {
 								onClick={handleOpenUplaodModal}
 							>
 								<i className="fa-solid fa-upload"></i>{' '}
-								&nbsp;Upload | Verify
+								&nbsp;Upload new version | Verify
 							</button>
 						</div>
 						<div className="mb-4">

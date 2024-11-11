@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import MyFilesPage from './pages/MyFilesPage';
 import { MetamaskProvider } from './contexts/MetamaskContext';
 import PrivateRoute from './PrivateRoute';
+
 import FileDetailsPage from './pages/FileDetailsPage';
 function App() {
 	return (
@@ -17,15 +18,6 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route index element={<Home />} />
-						{/* <Route
-							path="/upload"
-							element={
-								<PrivateRoute>
-									<UploadPage />
-								</PrivateRoute>
-							}
-						/> */}
-
 						<Route
 							path="/files"
 							element={

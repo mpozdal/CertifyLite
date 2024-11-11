@@ -4,6 +4,7 @@ import FileRegistry from '../build/contracts/FileRegistry.json';
 export const MetamaskContext = createContext();
 export const MetamaskProvider = ({ children }) => {
 	const [isConnected, setIsConnected] = useState(false);
+
 	const [accountNumber, setAccountNumber] = useState(null);
 	const [ethBalance, setEthBalance] = useState('');
 	const [contract, setContract] = useState(null);
@@ -21,22 +22,6 @@ export const MetamaskProvider = ({ children }) => {
 		}
 		return provider;
 	};
-	// const checkMetamaskConnection = async () => {
-	// 	try {
-	// 		const currentProvider = detectCurrentProvider();
-	// 		if (currentProvider) {
-	// 			const web3 = new Web3(currentProvider);
-	// 			const userAccount = await web3.eth.getAccounts();
-	// 			const account = userAccount[0];
-	// 			setAccountNumber(account);
-	// 			let ethBalance2 = await web3.eth.getBalance(account);
-	// 			setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
-	// 			setIsConnected(true);
-	// 		}
-	// 	} catch (err) {
-	// 		console.log(err);
-	// 	}
-	// };
 
 	const onConnect = async () => {
 		try {
@@ -49,7 +34,6 @@ export const MetamaskProvider = ({ children }) => {
 				const userAccount = await web3.eth.getAccounts();
 				const account = userAccount[0];
 				setAccountNumber(account);
-
 				const networkId = await web3.eth.net.getId();
 				const deployedNetwork = FileRegistry.networks[networkId];
 				if (deployedNetwork) {
@@ -61,7 +45,6 @@ export const MetamaskProvider = ({ children }) => {
 				} else {
 					alert('Contract not deployed to detected network.');
 				}
-
 				let ethBalance2 = await web3.eth.getBalance(account);
 				setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
 				setIsConnected(true);
@@ -71,10 +54,22 @@ export const MetamaskProvider = ({ children }) => {
 		}
 	};
 
+	const refreshBalance = async (account) => {
+		try {
+			const currentProvider = detectCurrentProvider();
+			const web3 = new Web3(currentProvider);
+			let ethBalance2 = await web3.eth.getBalance(account);
+			setEthBalance(web3.utils.fromWei(ethBalance2, 'ether'));
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	const onDisconnect = () => {
 		setIsConnected(false);
 		setAccountNumber(null);
 	};
+	window.addEventListener('load', onConnect);
 
 	return (
 		<MetamaskContext.Provider
@@ -85,6 +80,7 @@ export const MetamaskProvider = ({ children }) => {
 				ethBalance,
 				onDisconnect,
 				contract,
+				refreshBalance,
 			}}
 		>
 			{children}

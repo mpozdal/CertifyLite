@@ -4,13 +4,17 @@ export const storeFileHash = async (
 	contract,
 	name
 ) => {
+	let res;
 	try {
 		await contract.methods
 			.addFile(fileHash, name, 0)
-			.send({ from: accountNumber });
+			.send({ from: accountNumber })
+			.then((_res) => (res = _res));
 	} catch (err) {
 		console.log('Error while uploading data at blockchain!');
+		res = err;
 	}
+	return res;
 };
 export const addNewVersion = async (
 	accountNumber,
@@ -52,7 +56,7 @@ export const getUserFiles = async (accountNumber, contract) => {
 	if (contract && accountNumber) {
 		try {
 			await contract.methods
-				.getUserFiles(accountNumber)
+				.getLatestFilesByUser(accountNumber)
 				.call()
 				.then((res) => {
 					hashes = res;
@@ -69,7 +73,7 @@ export const getAllFiles = async (contract) => {
 	if (contract) {
 		try {
 			await contract.methods
-				.getAllFiles()
+				.getLatestFiles()
 				.call()
 				.then((res) => {
 					hashes = res;

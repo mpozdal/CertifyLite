@@ -61,6 +61,15 @@ function Response({
 			</div>
 		);
 	}
+	if (response === 'uploaded') {
+		return (
+			<div className="h-full flex flex-col justify-center items-center text-center gap-5">
+				<div className="text-2xl font-bold text-black text-center">
+					Uploaded
+				</div>
+			</div>
+		);
+	}
 	if (response === 'upload') {
 		return (
 			<div className="h-full w-full flex flex-col justify-center items-center text-center gap-5">
@@ -105,7 +114,7 @@ function Response({
 					textColor=""
 				/>
 				<div className="text-2xl font-bold text-black text-center">
-					Opening the latest version
+					Loading all versions
 				</div>
 			</div>
 		);
