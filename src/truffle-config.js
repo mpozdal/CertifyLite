@@ -5,8 +5,8 @@ module.exports = {
 		sepolia: {
 			provider: () =>
 				new HDWalletProvider(
-					'ca2fc0570c54d9d003b13c81c252663bdd01a7077050f2c4f4d382c371d7295c',
-					'https://sepolia.infura.io/v3/3a19fbfcf0074dfe94be0462861764bf'
+					process.env.PRIVATE_KEY,
+					process.env.INFURA_SEPOLIA_URL
 				),
 			network_id: 11155111, // ID sieci Sepolia
 			gas: 4500000, // Opcjonalne: limit gazu
