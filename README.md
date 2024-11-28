@@ -30,8 +30,11 @@ https://certifylite.netlify.app
 Kontrakt w Solidity został zaprojektowany do obsługi:
 
 1. **Przechowywania hashy plików wraz ze znacznikiem czasu**
+   
 2. **Kontroli wersji poprzez powiązanie nowych hashy z poprzednimi**
+   
 3. **Sprawdzania autentyczności poprzez porównanie hashy**
+   
 4. **Kod kontraktu znajduje się w folderze /contracts.**
 
 ---
