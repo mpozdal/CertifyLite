@@ -24,3 +24,30 @@ https://certifylite.netlify.app
    Wszystkie operacje są realizowane na testowej sieci **Sepolia**, zapewniając zdecentralizowane i przejrzyste przechowywanie danych.
 
 ---
+
+## Smart Contract
+
+Kontrakt w Solidity został zaprojektowany do obsługi:
+
+1. **Przechowywania hashy plików wraz ze znacznikiem czasu**
+2. **Kontroli wersji poprzez powiązanie nowych hashy z poprzednimi**
+3. **Sprawdzania autentyczności poprzez porównanie hashy**
+4. **Kod kontraktu znajduje się w folderze /contracts.**
+
+---
+
+## Technologie
+
+- **Frontend:** React, Tailwind CSS
+- **Blockchain:** Solidity, Truffle
+- **Integracja portfela:** MetaMask
+- **Sieć:** Sepolia Testnet
+- **Hashowanie:** Crypto.js
+
+---
+
+
+
+
+
+
